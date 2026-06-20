@@ -6,7 +6,7 @@ struct Coordinate {
 	int y;
 };
 
-struct Coordinate getCoordinateFromUser(char boardState[3][3])
+struct Coordinate getCoordinateFromUser(char (*boardState)[3])
 {
 	struct Coordinate position = {};
 	while (1) {
@@ -28,7 +28,7 @@ struct Coordinate getCoordinateFromUser(char boardState[3][3])
 	}
 }
 
-void renderBoard(char boardState[3][3])
+void renderBoard(char (*boardState)[3])
 {
 	for (int i = 0; i < 3; i++) {
 		for (int j = 0; j < 3; j++) {
