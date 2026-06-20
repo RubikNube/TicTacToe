@@ -30,14 +30,12 @@ struct Coordinate getCoordinateFromUser(char (*boardState)[3])
 
 void renderBoard(char (*boardState)[3])
 {
-	for (int i = 0; i < 3; i++) {
+	for (int i = 0; i < 3; i++)
 		for (int j = 0; j < 3; j++) {
 			printf("[%c]", boardState[i][j]);
-			if (j == 2) {
+			if (j == 2)
 				printf("\n");
-			}
 		}
-	}
 }
 
 char selectSide()
@@ -83,9 +81,8 @@ short checkGameResult(char boardState[3][3], int numberOfFreeFields)
 				}
 			}
 		}
-		if (numberOfConnectedFields == 3) {
+		if (numberOfConnectedFields == 3)
 			return side == 'x' ? 1 : 2;
-		}
 	}
 	// check columns
 	for (int i = 0; i < 3; i++) {
@@ -108,9 +105,8 @@ short checkGameResult(char boardState[3][3], int numberOfFreeFields)
 				}
 			}
 		}
-		if (numberOfConnectedFields == 3) {
+		if (numberOfConnectedFields == 3)
 			return side == 'x' ? 1 : 2;
-		}
 	}
 	// check diagonals
 
@@ -133,9 +129,8 @@ short checkGameResult(char boardState[3][3], int numberOfFreeFields)
 			}
 		}
 	}
-	if (numberOfConnectedFieldsDiagonal1133 == 3) {
+	if (numberOfConnectedFieldsDiagonal1133 == 3)
 		return sideDiagonal1133 == 'x' ? 1 : 2;
-	}
 
 	int numberOfConnectedFieldsDiagonal1331 = 0;
 	char side1331 = ' ';
@@ -156,9 +151,8 @@ short checkGameResult(char boardState[3][3], int numberOfFreeFields)
 		}
 	}
 
-	if (numberOfConnectedFieldsDiagonal1331 == 3) {
+	if (numberOfConnectedFieldsDiagonal1331 == 3)
 		return side1331 == 'x' ? 1 : 2;
-	}
 
 	return numberOfFreeFields <= 0 ? 0 : -1;
 }
@@ -186,11 +180,9 @@ int main()
 
 	char boardState[3][3];
 
-	for (int i = 0; i < 3; i++) {
-		for (int j = 0; j < 3; j++) {
+	for (int i = 0; i < 3; i++)
+		for (int j = 0; j < 3; j++)
 			boardState[i][j] = ' ';
-		}
-	}
 
 	renderBoard(boardState);
 
@@ -205,9 +197,8 @@ int main()
 		boardState[nextMove.y - 1][nextMove.x - 1] = userSide;
 		freeFields--;
 		gameResult = checkGameResult(boardState, freeFields);
-		if (gameResult != -1) {
+		if (gameResult != -1)
 			break;
-		}
 
 		struct Coordinate botMove = {};
 
@@ -215,9 +206,8 @@ int main()
 			botMove.x = rand() % 3;
 			botMove.y = rand() % 3;
 
-			if (boardState[botMove.y][botMove.x] != ' ') {
+			if (boardState[botMove.y][botMove.x] != ' ')
 				continue;
-			}
 
 			break;
 		}
@@ -229,9 +219,8 @@ int main()
 		renderBoard(boardState);
 
 		gameResult = checkGameResult(boardState, freeFields);
-		if (gameResult != -1) {
+		if (gameResult != -1)
 			break;
-		}
 	}
 
 	char *gameResultMessage = getGameResultMessage(gameResult);
