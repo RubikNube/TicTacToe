@@ -179,8 +179,7 @@ char *getGameResultMessage(int gameResult)
 
 int main()
 {
-	char message[] = "Tic Tac Toe\n\n";
-	printf(message);
+	printf("Tic Tac Toe\n\n");
 
 	char userSide = selectSide();
 	char botSide = userSide == 'x' ? 'o' : 'x';
