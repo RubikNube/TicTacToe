@@ -8,8 +8,7 @@ struct Coordinate{
 
 struct Coordinate getCoordinateFromUser(char boardState[3][3]){
 	struct Coordinate position={};
-	bool isFieldValid=false;
-	while(!isFieldValid){
+	while(1){
 		scanf("%d %d", &position.x, &position.y);
 		if(position.x<1||position.x>3||position.y<1||position.y>3){
 			printf("Invalid coordinated. Enter coordinates between 1 and 3.\n");
@@ -204,11 +203,9 @@ int main(){
 			break;
 		}
 
-		// get random free field
-		bool isFieldValid=false;
 		struct Coordinate botMove={};
 
-		while(!isFieldValid){
+		while(1){
 			botMove.x=rand()%3;
 			botMove.y=rand()%3;
 
@@ -216,7 +213,7 @@ int main(){
 				continue;
 			}
 
-			isFieldValid=true;
+			break;
 		}
 
 		// execute bot move
