@@ -6,7 +6,7 @@ struct Coordinate {
 	int y;
 };
 
-struct Coordinate getCoordinateFromUser(char (*boardState)[3])
+struct Coordinate get_user_move(char (*board)[3])
 {
 	struct Coordinate position = {};
 	while (1) {
@@ -19,7 +19,7 @@ struct Coordinate getCoordinateFromUser(char (*boardState)[3])
 
 		printf("You entered %d %d\n", position.x, position.y);
 
-		if (boardState[position.y - 1][position.x - 1] != ' ') {
+		if (board[position.y - 1][position.x - 1] != ' ') {
 			printf("Field already taken. Choose a different one.\n");
 			continue;
 		}
@@ -28,17 +28,17 @@ struct Coordinate getCoordinateFromUser(char (*boardState)[3])
 	}
 }
 
-void renderBoard(char (*boardState)[3])
+void render_board(char (*board)[3])
 {
 	for (int i = 0; i < 3; i++)
 		for (int j = 0; j < 3; j++) {
-			printf("[%c]", boardState[i][j]);
+			printf("[%c]", board[i][j]);
 			if (j == 2)
 				printf("\n");
 		}
 }
 
-char selectSide()
+char select_side()
 {
 	printf("Choose your side: x or o?\n");
 
@@ -58,92 +58,92 @@ char selectSide()
 /*
  * Returns -1 if not decided, 0 if tie, 1 if x wins, 2 if o wins
  */
-short checkGameResult(char boardState[3][3], int numberOfFreeFields)
+short check_game_results(char (*board)[3], int free_fields)
 {
 	// check rows
 	for (int i = 0; i < 3; i++) {
-		int numberOfConnectedFields = 0;
+		int connected_fields = 0;
 		char side = ' ';
 
 		for (int j = 0; j < 3; j++) {
-			char currentSide = boardState[i][j];
+			char tmp_side = board[i][j];
 
-			if (currentSide != ' ') {
+			if (tmp_side != ' ') {
 				if (side == ' ') {
-					side = currentSide;
-					numberOfConnectedFields++;
+					side = tmp_side;
+					connected_fields++;
 					continue;
-				} else if (side == currentSide) {
-					numberOfConnectedFields++;
+				} else if (side == tmp_side) {
+					connected_fields++;
 					continue;
 				} else {
 					break;
 				}
 			}
 		}
-		if (numberOfConnectedFields == 3)
+		if (connected_fields == 3)
 			return side == 'x' ? 1 : 2;
 	}
 	// check columns
 	for (int i = 0; i < 3; i++) {
-		int numberOfConnectedFields = 0;
+		int connected_fields = 0;
 		char side = ' ';
 
 		for (int j = 0; j < 3; j++) {
-			char currentSide = boardState[j][i];
+			char tmp_side = board[j][i];
 
-			if (currentSide != ' ') {
+			if (tmp_side != ' ') {
 				if (side == ' ') {
-					side = currentSide;
-					numberOfConnectedFields++;
+					side = tmp_side;
+					connected_fields++;
 					continue;
-				} else if (side == currentSide) {
-					numberOfConnectedFields++;
+				} else if (side == tmp_side) {
+					connected_fields++;
 					continue;
 				} else {
 					break;
 				}
 			}
 		}
-		if (numberOfConnectedFields == 3)
+		if (connected_fields == 3)
 			return side == 'x' ? 1 : 2;
 	}
 	// check diagonals
 
 	// 0,0 to 2,2
-	int numberOfConnectedFieldsDiagonal1133 = 0;
-	char sideDiagonal1133 = ' ';
+	int connected_fields_1133 = 0;
+	char side_1133 = ' ';
 	for (int i = 0; i < 3; i++) {
-		char currentSide = boardState[i][i];
+		char tmp_side = board[i][i];
 
-		if (currentSide != ' ') {
-			if (sideDiagonal1133 == ' ') {
-				sideDiagonal1133 = currentSide;
-				numberOfConnectedFieldsDiagonal1133++;
+		if (tmp_side != ' ') {
+			if (side_1133 == ' ') {
+				side_1133 = tmp_side;
+				connected_fields_1133++;
 				continue;
-			} else if (sideDiagonal1133 == currentSide) {
-				numberOfConnectedFieldsDiagonal1133++;
+			} else if (side_1133 == tmp_side) {
+				connected_fields_1133++;
 				continue;
 			} else {
 				break;
 			}
 		}
 	}
-	if (numberOfConnectedFieldsDiagonal1133 == 3)
-		return sideDiagonal1133 == 'x' ? 1 : 2;
+	if (connected_fields_1133 == 3)
+		return side_1133 == 'x' ? 1 : 2;
 
-	int numberOfConnectedFieldsDiagonal1331 = 0;
-	char side1331 = ' ';
+	int connected_fields_1331 = 0;
+	char side_1331 = ' ';
 	// 1,3 to 3,1
 	for (int i = 2; i >= 0; i--) {
-		char currentSide = boardState[2 - i][i];
-		if (currentSide != ' ') {
-			if (side1331 == ' ') {
-				side1331 = currentSide;
-				numberOfConnectedFieldsDiagonal1331++;
+		char tmp_side = board[2 - i][i];
+		if (tmp_side != ' ') {
+			if (side_1331 == ' ') {
+				side_1331 = tmp_side;
+				connected_fields_1331++;
 				continue;
-			} else if (side1331 == currentSide) {
-				numberOfConnectedFieldsDiagonal1331++;
+			} else if (side_1331 == tmp_side) {
+				connected_fields_1331++;
 				continue;
 			} else {
 				break;
@@ -151,15 +151,15 @@ short checkGameResult(char boardState[3][3], int numberOfFreeFields)
 		}
 	}
 
-	if (numberOfConnectedFieldsDiagonal1331 == 3)
-		return side1331 == 'x' ? 1 : 2;
+	if (connected_fields_1331 == 3)
+		return side_1331 == 'x' ? 1 : 2;
 
-	return numberOfFreeFields <= 0 ? 0 : -1;
+	return free_fields <= 0 ? 0 : -1;
 }
 
-char *getGameResultMessage(int gameResult)
+char *get_result_message(int result)
 {
-	switch (gameResult) {
+	switch (result) {
 	case 1:
 		return "Player x won";
 	case 2:
@@ -175,57 +175,57 @@ int main()
 {
 	printf("Tic Tac Toe\n\n");
 
-	char userSide = selectSide();
-	char botSide = userSide == 'x' ? 'o' : 'x';
+	char user_side = select_side();
+	char bot_side = user_side == 'x' ? 'o' : 'x';
 
-	char boardState[3][3];
+	char board[3][3];
 
 	for (int i = 0; i < 3; i++)
 		for (int j = 0; j < 3; j++)
-			boardState[i][j] = ' ';
+			board[i][j] = ' ';
 
-	renderBoard(boardState);
+	render_board(board);
 
-	int freeFields = 9;
-	short gameResult = -1;
+	int free_fields = 9;
+	short result = -1;
 
-	while (gameResult == -1) {
+	while (result == -1) {
 		printf("Make your move: \n");
 
-		struct Coordinate nextMove = getCoordinateFromUser(boardState);
+		struct Coordinate user_move = get_user_move(board);
 
-		boardState[nextMove.y - 1][nextMove.x - 1] = userSide;
-		freeFields--;
-		gameResult = checkGameResult(boardState, freeFields);
-		if (gameResult != -1)
+		board[user_move.y - 1][user_move.x - 1] = user_side;
+		free_fields--;
+		result = check_game_results(board, free_fields);
+		if (result != -1)
 			break;
 
-		struct Coordinate botMove = {};
+		struct Coordinate bot_move = {};
 
 		while (1) {
-			botMove.x = rand() % 3;
-			botMove.y = rand() % 3;
+			bot_move.x = rand() % 3;
+			bot_move.y = rand() % 3;
 
-			if (boardState[botMove.y][botMove.x] != ' ')
+			if (board[bot_move.y][bot_move.x] != ' ')
 				continue;
 
 			break;
 		}
 
 		// execute bot move
-		boardState[botMove.y][botMove.x] = botSide;
-		freeFields--;
+		board[bot_move.y][bot_move.x] = bot_side;
+		free_fields--;
 
-		renderBoard(boardState);
+		render_board(board);
 
-		gameResult = checkGameResult(boardState, freeFields);
-		if (gameResult != -1)
+		result = check_game_results(board, free_fields);
+		if (result != -1)
 			break;
 	}
 
-	char *gameResultMessage = getGameResultMessage(gameResult);
-	printf("%s\n\n", gameResultMessage);
-	renderBoard(boardState);
+	char *result_message = get_result_message(result);
+	printf("%s\n\n", result_message);
+	render_board(board);
 
 	return 0;
 }
