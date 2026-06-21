@@ -30,6 +30,7 @@ struct Coordinate get_user_move(char (*board)[3])
 
 void render_board(char (*board)[3])
 {
+	printf("\n\nBoard:\n");
 	for (int i = 0; i < 3; i++)
 		for (int j = 0; j < 3; j++) {
 			printf("[%c]", board[i][j]);
@@ -158,6 +159,22 @@ struct Coordinate get_bot_move(char (*board)[3])
 	}
 }
 
+short execute_user_move(char (*board)[3], char user_side, int *free_fields)
+{
+	struct Coordinate user_move = get_user_move(board);
+	board[user_move.y - 1][user_move.x - 1] = user_side;
+	(*free_fields)--;
+	return check_game_results(board, *free_fields);
+}
+
+short execute_bot_move(char (*board)[3], char bot_side, int *free_fields)
+{
+	struct Coordinate bot_move = get_bot_move(board);
+	board[bot_move.y][bot_move.x] = bot_side;
+	(*free_fields)--;
+	return check_game_results(board, *free_fields);
+}
+
 int main()
 {
 	printf("Tic Tac Toe\n\n");
@@ -179,29 +196,23 @@ int main()
 	while (result == -1) {
 		printf("Make your move: \n");
 
-		struct Coordinate user_move = get_user_move(board);
-
-		board[user_move.y - 1][user_move.x - 1] = user_side;
-		free_fields--;
-		result = check_game_results(board, free_fields);
+		result = execute_user_move(board, user_side, &free_fields);
 		if (result != -1)
 			break;
 
-		struct Coordinate bot_move = get_bot_move(board);
+		render_board(board);
 
-		// execute bot move
-		board[bot_move.y][bot_move.x] = bot_side;
-		free_fields--;
-		result = check_game_results(board, free_fields);
+		result = execute_bot_move(board, bot_side, &free_fields);
 		if (result != -1)
 			break;
 
 		render_board(board);
 	}
 
+	render_board(board);
+
 	char *result_message = get_result_message(result);
 	printf("%s\n\n", result_message);
-	render_board(board);
 
 	return 0;
 }
