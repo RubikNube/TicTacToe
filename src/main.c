@@ -60,99 +60,74 @@ char select_side()
  */
 short check_game_results(char (*board)[3], int free_fields)
 {
-	// check rows
-	for (int i = 0; i < 3; i++) {
-		int connected_fields = 0;
-		char side = ' ';
-
-		for (int j = 0; j < 3; j++) {
-			char tmp_side = board[i][j];
-
-			if (tmp_side != ' ') {
-				if (side == ' ') {
-					side = tmp_side;
-					connected_fields++;
-					continue;
-				} else if (side == tmp_side) {
-					connected_fields++;
-					continue;
-				} else {
-					break;
-				}
-			}
-		}
-		if (connected_fields == 3)
-			return side == 'x' ? 1 : 2;
-	}
-	// check columns
-	for (int i = 0; i < 3; i++) {
-		int connected_fields = 0;
-		char side = ' ';
-
-		for (int j = 0; j < 3; j++) {
-			char tmp_side = board[j][i];
-
-			if (tmp_side != ' ') {
-				if (side == ' ') {
-					side = tmp_side;
-					connected_fields++;
-					continue;
-				} else if (side == tmp_side) {
-					connected_fields++;
-					continue;
-				} else {
-					break;
-				}
-			}
-		}
-		if (connected_fields == 3)
-			return side == 'x' ? 1 : 2;
-	}
-	// check diagonals
-
-	// 0,0 to 2,2
 	int connected_fields_1133 = 0;
 	char side_1133 = ' ';
-	for (int i = 0; i < 3; i++) {
-		char tmp_side = board[i][i];
-
-		if (tmp_side != ' ') {
-			if (side_1133 == ' ') {
-				side_1133 = tmp_side;
-				connected_fields_1133++;
-				continue;
-			} else if (side_1133 == tmp_side) {
-				connected_fields_1133++;
-				continue;
-			} else {
-				break;
-			}
-		}
-	}
-	if (connected_fields_1133 == 3)
-		return side_1133 == 'x' ? 1 : 2;
-
 	int connected_fields_1331 = 0;
 	char side_1331 = ' ';
-	// 1,3 to 3,1
-	for (int i = 2; i >= 0; i--) {
-		char tmp_side = board[2 - i][i];
-		if (tmp_side != ' ') {
-			if (side_1331 == ' ') {
-				side_1331 = tmp_side;
-				connected_fields_1331++;
-				continue;
-			} else if (side_1331 == tmp_side) {
-				connected_fields_1331++;
-				continue;
-			} else {
-				break;
+
+	for (int i = 0; i < 3; i++) {
+		int connected_row_fields = 0;
+		char side_row = ' ';
+		int connected_column_fields = 0;
+		char side_column = ' ';
+
+		char tmp_side_1133 = board[i][i];
+
+		if (tmp_side_1133 != ' ') {
+			if (side_1133 == ' ') {
+				side_1133 = tmp_side_1133;
+				connected_fields_1133++;
+			} else if (side_1133 == tmp_side_1133) {
+				connected_fields_1133++;
 			}
 		}
-	}
 
-	if (connected_fields_1331 == 3)
-		return side_1331 == 'x' ? 1 : 2;
+		char tmp_side_1331 = board[2 - i][i];
+		if (tmp_side_1331 != ' ') {
+			if (side_1331 == ' ') {
+				side_1331 = tmp_side_1331;
+				connected_fields_1331++;
+			} else if (side_1331 == tmp_side_1331) {
+				connected_fields_1331++;
+			}
+		}
+
+		for (int j = 0; j < 3; j++) {
+			char tmp_side_row = board[i][j];
+
+			if (tmp_side_row != ' ') {
+				if (side_row == ' ') {
+					side_row = tmp_side_row;
+					connected_row_fields++;
+				} else if (side_row == tmp_side_row) {
+					connected_row_fields++;
+				}
+			}
+
+			char tmp_side_column = board[j][i];
+
+			if (tmp_side_column != ' ') {
+				if (side_column == ' ') {
+					side_column = tmp_side_column;
+					connected_column_fields++;
+				} else if (side_column == tmp_side_column) {
+					connected_column_fields++;
+				}
+			}
+		}
+
+		if (connected_row_fields == 3)
+			return side_row == 'x' ? 1 : 2;
+
+		if (connected_column_fields == 3)
+			return side_column == 'x' ? 1 : 2;
+
+		if (connected_fields_1133 == 3)
+			return side_1133 == 'x' ? 1 : 2;
+
+		if (connected_fields_1331 == 3)
+			return side_1331 == 'x' ? 1 : 2;
+	}
 
 	return free_fields <= 0 ? 0 : -1;
 }
