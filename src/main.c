@@ -175,6 +175,16 @@ short execute_bot_move(char (*board)[3], char bot_side, int *free_fields)
 	return check_game_results(board, *free_fields);
 }
 
+short execute_move(char move_side, char (*board)[3], char user_side,
+		   int *free_fields)
+{
+	if (move_side == user_side) {
+		return execute_user_move(board, move_side, free_fields);
+	} else {
+		return execute_bot_move(board, move_side, free_fields);
+	}
+}
+
 int main()
 {
 	printf("Tic Tac Toe\n\n");
@@ -196,13 +206,13 @@ int main()
 	while (result == -1) {
 		printf("Make your move: \n");
 
-		result = execute_user_move(board, user_side, &free_fields);
+		result = execute_move('x', board, user_side, &free_fields);
 		if (result != -1)
 			break;
 
 		render_board(board);
 
-		result = execute_bot_move(board, bot_side, &free_fields);
+		result = execute_move('o', board, user_side, &free_fields);
 		if (result != -1)
 			break;
 
