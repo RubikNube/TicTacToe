@@ -64,7 +64,6 @@ short check_game_results(char (*board)[3], int free_fields)
 	char side_1133 = ' ';
 	int connected_fields_1331 = 0;
 	char side_1331 = ' ';
-
 	for (int i = 0; i < 3; i++) {
 		int connected_row_fields = 0;
 		char side_row = ' ';
@@ -146,6 +145,19 @@ char *get_result_message(int result)
 	}
 }
 
+struct Coordinate get_bot_move(char (*board)[3])
+{
+	struct Coordinate bot_move = {};
+
+	while (1) {
+		bot_move.x = rand() % 3;
+		bot_move.y = rand() % 3;
+
+		if (board[bot_move.y][bot_move.x] == ' ')
+			return bot_move;
+	}
+}
+
 int main()
 {
 	printf("Tic Tac Toe\n\n");
@@ -175,27 +187,16 @@ int main()
 		if (result != -1)
 			break;
 
-		struct Coordinate bot_move = {};
-
-		while (1) {
-			bot_move.x = rand() % 3;
-			bot_move.y = rand() % 3;
-
-			if (board[bot_move.y][bot_move.x] != ' ')
-				continue;
-
-			break;
-		}
+		struct Coordinate bot_move = get_bot_move(board);
 
 		// execute bot move
 		board[bot_move.y][bot_move.x] = bot_side;
 		free_fields--;
-
-		render_board(board);
-
 		result = check_game_results(board, free_fields);
 		if (result != -1)
 			break;
+
+		render_board(board);
 	}
 
 	char *result_message = get_result_message(result);
