@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
 
 #define RESULT_UNDECIDED -1
@@ -6,19 +7,23 @@
 #define RESULT_X_WINS 1
 #define RESULT_O_WINS 2
 
+#define TRUE 1
+#define FALSE 0
+
 struct Coordinate {
 	int x;
 	int y;
 };
 
-struct Coordinate get_user_move(char (*board)[3])
+struct Coordinate get_user_move(int board_size, char board[][board_size])
 {
 	struct Coordinate position = {};
-	while (1) {
+	while (TRUE) {
 		scanf("%d %d", &position.x, &position.y);
-		if (position.x < 1 || position.x > 3 || position.y < 1 ||
-		    position.y > 3) {
-			printf("Invalid coordinated. Enter coordinates between 1 and 3.\n");
+		if (position.x < 1 || position.x > board_size ||
+		    position.y < 1 || position.y > board_size) {
+			printf("Invalid coordinated. Enter coordinates between 1 and %d.\n",
+			       board_size);
 			continue;
 		}
 
@@ -33,13 +38,13 @@ struct Coordinate get_user_move(char (*board)[3])
 	}
 }
 
-void render_board(char (*board)[3])
+void render_board(int board_size, char board[][board_size])
 {
 	printf("\n\nBoard:\n");
-	for (int i = 0; i < 3; i++)
-		for (int j = 0; j < 3; j++) {
+	for (int i = 0; i < board_size; i++)
+		for (int j = 0; j < board_size; j++) {
 			printf("[%c]", board[i][j]);
-			if (j == 2)
+			if (j == board_size - 1)
 				printf("\n");
 		}
 }
@@ -49,12 +54,12 @@ char select_side()
 	printf("Choose your side: x or o?\n");
 
 	char side;
-	scanf("%c", &side);
+	scanf(" %c", &side);
 
 	while (side != 'x' && side != 'o') {
-		printf("You have to choose x or o. You typed %c\n", side);
+		printf("You have to choose x or o. You typed '%c'\n", side);
 		printf("Choose your side:\n");
-		scanf("%c", &side);
+		scanf(" %c", &side);
 	}
 
 	printf("Good. You play as %c\n", side);
@@ -69,13 +74,14 @@ short get_winning_side(char side)
 /*
  * Returns -1 if not decided, 0 if tie, 1 if x wins, 2 if o wins
  */
-short check_game_results(char (*board)[3], int free_fields)
+short check_game_results(int board_size, char board[][board_size],
+			 int free_fields)
 {
 	int connected_fields_1133 = 0;
 	char side_1133 = ' ';
 	int connected_fields_1331 = 0;
 	char side_1331 = ' ';
-	for (int i = 0; i < 3; i++) {
+	for (int i = 0; i < board_size; i++) {
 		int connected_row_fields = 0;
 		char side_row = ' ';
 		int connected_column_fields = 0;
@@ -102,7 +108,7 @@ short check_game_results(char (*board)[3], int free_fields)
 			}
 		}
 
-		for (int j = 0; j < 3; j++) {
+		for (int j = 0; j < board_size; j++) {
 			char tmp_side_row = board[i][j];
 
 			if (tmp_side_row != ' ') {
@@ -126,16 +132,16 @@ short check_game_results(char (*board)[3], int free_fields)
 			}
 		}
 
-		if (connected_row_fields == 3)
+		if (connected_row_fields == board_size)
 			return get_winning_side(side_row);
 
-		if (connected_column_fields == 3)
+		if (connected_column_fields == board_size)
 			return get_winning_side(side_column);
 
-		if (connected_fields_1133 == 3)
+		if (connected_fields_1133 == board_size)
 			return get_winning_side(side_1133);
 
-		if (connected_fields_1331 == 3)
+		if (connected_fields_1331 == board_size)
 			return get_winning_side(side_1331);
 	}
 
@@ -156,42 +162,46 @@ char *get_result_message(int result)
 	}
 }
 
-struct Coordinate get_bot_move(char (*board)[3])
+struct Coordinate get_bot_move(int board_size, char board[][board_size])
 {
 	struct Coordinate bot_move = {};
 
-	while (1) {
-		bot_move.x = rand() % 3;
-		bot_move.y = rand() % 3;
+	while (TRUE) {
+		bot_move.x = rand() % board_size;
+		bot_move.y = rand() % board_size;
 
 		if (board[bot_move.y][bot_move.x] == ' ')
 			return bot_move;
 	}
 }
 
-short execute_user_move(char (*board)[3], char user_side, int *free_fields)
+short execute_user_move(int board_size, char board[][board_size],
+			char user_side, int *free_fields)
 {
-	struct Coordinate user_move = get_user_move(board);
+	struct Coordinate user_move = get_user_move(board_size, board);
 	board[user_move.y - 1][user_move.x - 1] = user_side;
 	(*free_fields)--;
-	return check_game_results(board, *free_fields);
+	return check_game_results(board_size, board, *free_fields);
 }
 
-short execute_bot_move(char (*board)[3], char bot_side, int *free_fields)
+short execute_bot_move(int board_size, char board[][board_size], char bot_side,
+		       int *free_fields)
 {
-	struct Coordinate bot_move = get_bot_move(board);
+	struct Coordinate bot_move = get_bot_move(board_size, board);
 	board[bot_move.y][bot_move.x] = bot_side;
 	(*free_fields)--;
-	return check_game_results(board, *free_fields);
+	return check_game_results(board_size, board, *free_fields);
 }
 
-short execute_move(char move_side, char (*board)[3], char user_side,
-		   int *free_fields)
+short execute_move(char move_side, int board_size, char board[][board_size],
+		   char user_side, int *free_fields)
 {
 	if (move_side == user_side) {
-		return execute_user_move(board, move_side, free_fields);
+		return execute_user_move(board_size, board, move_side,
+					 free_fields);
 	} else {
-		return execute_bot_move(board, move_side, free_fields);
+		return execute_bot_move(board_size, board, move_side,
+					free_fields);
 	}
 }
 
@@ -199,33 +209,38 @@ int main()
 {
 	printf("Tic Tac Toe\n\n");
 
+	int board_size;
+	printf("Enter board size: \n");
+	scanf("%d", &board_size);
+
 	char user_side = select_side();
-	char board[3][3] = { { ' ', ' ', ' ' },
-			     { ' ', ' ', ' ' },
-			     { ' ', ' ', ' ' } };
+	char board[board_size][board_size];
+	memset(board, ' ', sizeof board);
 
-	render_board(board);
+	render_board(board_size, board);
 
-	int free_fields = 9;
+	int free_fields = board_size * board_size;
 	short result = RESULT_UNDECIDED;
 
-	while (result == -1) {
+	while (result == RESULT_UNDECIDED) {
 		printf("Make your move: \n");
 
-		result = execute_move('x', board, user_side, &free_fields);
+		result = execute_move('x', board_size, board, user_side,
+				      &free_fields);
 		if (result != RESULT_UNDECIDED)
 			break;
 
-		render_board(board);
+		render_board(board_size, board);
 
-		result = execute_move('o', board, user_side, &free_fields);
+		result = execute_move('o', board_size, board, user_side,
+				      &free_fields);
 		if (result != RESULT_UNDECIDED)
 			break;
 
-		render_board(board);
+		render_board(board_size, board);
 	}
 
-	render_board(board);
+	render_board(board_size, board);
 
 	char *result_message = get_result_message(result);
 	printf("%s\n\n", result_message);
