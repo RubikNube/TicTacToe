@@ -56,6 +56,11 @@ char select_side()
 	return side;
 }
 
+short get_winning_side(char side)
+{
+	return side == 'x' ? 1 : 2;
+}
+
 /*
  * Returns -1 if not decided, 0 if tie, 1 if x wins, 2 if o wins
  */
@@ -117,16 +122,16 @@ short check_game_results(char (*board)[3], int free_fields)
 		}
 
 		if (connected_row_fields == 3)
-			return side_row == 'x' ? 1 : 2;
+			return get_winning_side(side_row);
 
 		if (connected_column_fields == 3)
-			return side_column == 'x' ? 1 : 2;
+			return get_winning_side(side_column);
 
 		if (connected_fields_1133 == 3)
-			return side_1133 == 'x' ? 1 : 2;
+			return get_winning_side(side_1133);
 
 		if (connected_fields_1331 == 3)
-			return side_1331 == 'x' ? 1 : 2;
+			return get_winning_side(side_1331);
 	}
 
 	return free_fields <= 0 ? 0 : -1;
