@@ -1,6 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define RESULT_UNDECIDED -1
+#define RESULT_TIE 0
+#define RESULT_X_WINS 1
+#define RESULT_O_WINS 2
+
 struct Coordinate {
 	int x;
 	int y;
@@ -58,7 +63,7 @@ char select_side()
 
 short get_winning_side(char side)
 {
-	return side == 'x' ? 1 : 2;
+	return side == 'x' ? RESULT_X_WINS : RESULT_O_WINS;
 }
 
 /*
@@ -134,17 +139,17 @@ short check_game_results(char (*board)[3], int free_fields)
 			return get_winning_side(side_1331);
 	}
 
-	return free_fields <= 0 ? 0 : -1;
+	return free_fields <= 0 ? RESULT_TIE : RESULT_UNDECIDED;
 }
 
 char *get_result_message(int result)
 {
 	switch (result) {
-	case 1:
+	case RESULT_X_WINS:
 		return "Player x won";
-	case 2:
+	case RESULT_O_WINS:
 		return "Player o won";
-	case 0:
+	case RESULT_TIE:
 		return "Tie";
 	default:
 		return "Undecided";
@@ -202,19 +207,19 @@ int main()
 	render_board(board);
 
 	int free_fields = 9;
-	short result = -1;
+	short result = RESULT_UNDECIDED;
 
 	while (result == -1) {
 		printf("Make your move: \n");
 
 		result = execute_move('x', board, user_side, &free_fields);
-		if (result != -1)
+		if (result != RESULT_UNDECIDED)
 			break;
 
 		render_board(board);
 
 		result = execute_move('o', board, user_side, &free_fields);
-		if (result != -1)
+		if (result != RESULT_UNDECIDED)
 			break;
 
 		render_board(board);
