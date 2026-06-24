@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
-#include <stdlib.h>
 #include "./coordinate.h"
+#include "./engine/engine.h"
 
 #define RESULT_UNDECIDED -1
 #define RESULT_TIE 0
@@ -155,19 +155,6 @@ char *get_result_message(int result)
 		return "Tie";
 	default:
 		return "Undecided";
-	}
-}
-
-struct Coordinate get_bot_move(int board_size, char board[][board_size])
-{
-	struct Coordinate bot_move = {};
-
-	while (TRUE) {
-		bot_move.x = rand() % board_size;
-		bot_move.y = rand() % board_size;
-
-		if (board[bot_move.y][bot_move.x] == ' ')
-			return bot_move;
 	}
 }
 
