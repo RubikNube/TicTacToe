@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include "./coordinate.h"
 
 #define RESULT_UNDECIDED -1
 #define RESULT_TIE 0
@@ -9,11 +10,6 @@
 
 #define TRUE 1
 #define FALSE 0
-
-struct Coordinate {
-	int x;
-	int y;
-};
 
 struct Coordinate get_user_move(int board_size, char board[][board_size])
 {
