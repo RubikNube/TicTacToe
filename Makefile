@@ -1,10 +1,14 @@
+PROJECT_ROOT := $(CURDIR)
+CC := gcc
+CFLAGS := -Wall
+
 tic-tac-toe:
-	gcc -o tic-tac-toe ./src/main.c ./src/engine/random.engine.c
+	$(CC) -o tic-tac-toe $(PROJECT_ROOT)/src/main.c $(PROJECT_ROOT)/src/engine/random.engine.c
 
 test:
-	gcc -Wall -Iinclude ./tests/unit/test_random_engine.c -o ./test_runner -lcunit
+	$(CC) $(CFLAGS) -Iinclude $(PROJECT_ROOT)/tests/unit/test_random_engine.c -o $(PROJECT_ROOT)/test_runner -lcunit
 	./test_runner
-	rm -rf ./test_runner
+	rm -rf $(PROJECT_ROOT)/test_runner
 
 clean:
-	rm -rf ./tic-tac-toe
+	rm -rf $(PROJECT_ROOT)/tic-tac-toe
