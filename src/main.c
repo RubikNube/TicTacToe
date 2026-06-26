@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
+#include <stdlib.h>
 #include "./coordinate.h"
 #include "./engine/engine.h"
 #include "./board/board.h"
@@ -181,6 +183,8 @@ short execute_move(char move_side, int board_size, char board[][board_size],
 int main()
 {
 	printf("Tic Tac Toe\n\n");
+
+	srand(time(NULL));
 
 	int board_size;
 	printf("Enter board size: \n");
