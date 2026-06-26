@@ -3,7 +3,7 @@ CC := gcc
 CFLAGS := -Wall
 
 tic-tac-toe:
-	$(CC) -o tic-tac-toe $(PROJECT_ROOT)/src/main.c $(PROJECT_ROOT)/src/engine/random.engine.c
+	$(CC) -o tic-tac-toe $(PROJECT_ROOT)/src/main.c $(PROJECT_ROOT)/src/engine/random_engine.c $(PROJECT_ROOT)/src/board/simple_board.c
 
 test:
 	$(CC) $(CFLAGS) -Iinclude $(PROJECT_ROOT)/tests/unit/test_random_engine.c -o $(PROJECT_ROOT)/test_runner -lcunit

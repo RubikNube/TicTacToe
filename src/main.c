@@ -2,6 +2,7 @@
 #include <string.h>
 #include "./coordinate.h"
 #include "./engine/engine.h"
+#include "./board/board.h"
 
 #define RESULT_UNDECIDED -1
 #define RESULT_TIE 0
@@ -32,17 +33,6 @@ struct Coordinate get_user_move(int board_size, char board[][board_size])
 
 		return position;
 	}
-}
-
-void render_board(int board_size, char board[][board_size])
-{
-	printf("\n\nBoard:\n");
-	for (int i = 0; i < board_size; i++)
-		for (int j = 0; j < board_size; j++) {
-			printf("[%c]", board[i][j]);
-			if (j == board_size - 1)
-				printf("\n");
-		}
 }
 
 char select_side()
