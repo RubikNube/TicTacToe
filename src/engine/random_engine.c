@@ -4,13 +4,20 @@
 
 struct Coordinate get_bot_move(int board_size, char board[][board_size])
 {
-	struct Coordinate bot_move = {};
+	struct Coordinate free_fields[board_size * board_size];
+	int number_free_fields = 0;
 
-	while (1) {
-		bot_move.x = rand() % board_size;
-		bot_move.y = rand() % board_size;
-
-		if (board[bot_move.y][bot_move.x] == ' ')
-			return bot_move;
+	for (int i = 0; i < board_size; i++) {
+		for (int j = 0; j < board_size; j++) {
+			char content = board[i][j];
+			if (content == ' ') {
+				struct Coordinate free_field = { j, i };
+				free_fields[number_free_fields] = free_field;
+				number_free_fields++;
+			}
+		}
 	}
+
+	int selected_field_number = rand() % number_free_fields;
+	return free_fields[selected_field_number];
 }
