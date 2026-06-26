@@ -17,6 +17,7 @@ You can choose between two UI's:
 ./tic-tac-toe
 ```
 
+```text
 ┌───┬───┬───┐
 │ X │ O │ X │
 ├───┼───┼───┤
@@ -24,6 +25,7 @@ You can choose between two UI's:
 ├───┼───┼───┤
 │ O │ X │ O │
 └───┴───┴───┘
+```
 
 ### Simple
 
@@ -31,6 +33,8 @@ You can choose between two UI's:
 ./tic-tac-toe-simple
 ```
 
+```text
 [x][o][x]
 [x][x][o]
 [o][x][o]
+```
