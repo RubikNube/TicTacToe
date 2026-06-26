@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <ctype.h>
 #include "./board.h"
 
 #define BOX_DOWN_RIGHT "┌"
@@ -51,12 +52,14 @@ void render_board(int board_size, char board[][board_size])
 
 		for (int j = 0; j < board_size; j++) {
 			if (j == 0)
-				printf("%s %c %s", BOX_VERTICAL, board[i][j],
-				       BOX_VERTICAL);
+				printf("%s %c %s", BOX_VERTICAL,
+				       toupper(board[i][j]), BOX_VERTICAL);
 			else if (j == board_size - 1)
-				printf(" %c %s\n", board[i][j], BOX_VERTICAL);
+				printf(" %c %s\n", toupper(board[i][j]),
+				       BOX_VERTICAL);
 			else
-				printf(" %c %s", board[i][j], BOX_VERTICAL);
+				printf(" %c %s", toupper(board[i][j]),
+				       BOX_VERTICAL);
 		}
 
 		if (i == board_size - 1) {
